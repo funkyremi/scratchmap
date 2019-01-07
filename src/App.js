@@ -1,34 +1,82 @@
+/* global jQuery*/
 import React, { Component } from "react";
+import Swal from "sweetalert2";
 import "./App.css";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedCountries: [],
+    };
+  }
   componentDidMount() {
-    // eslint-disable-next-line no-undef
     jQuery("#vmap").vectorMap({
       map: "world_en",
       enableZoom: false,
-      backgroundColor: "#fff",
-      color: "#DDB155",
-      hoverOpacity: 0.7,
-      showTooltip: true,
+      backgroundColor: "#343a41",
+      color: "#caa30a",
+      hoverOpacity: 0.9,
+      showTooltip: false,
       multiSelectRegion: true,
-      selectedColor: "#26B2E5",
+      selectedColor: "#00abe7",
       showLabels: false,
-      borderColor: '#000',
+      borderColor: "#000",
       borderWidth: 1,
       borderOpaticity: 1,
-      onRegionSelect: function(event, code, region) {
-        console.log(event, code, region)
+      selectedCountries: this.state.selectedCountries,
+      onRegionClick: (event, code, region) => {
+        event.preventDefault();
+        if (this.state.selectedCountries.find(c => c.toLowerCase() === code.toLowerCase())) {
+          Swal({
+            title: `Remove ${region}?`,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "👎",
+            confirmButtonText: "👍"
+          }).then(result => {
+            if (result.value) {
+              const selectedCountries = this.state.selectedCountries;
+              const index = selectedCountries.findIndex(c => c.toLowerCase() === code.toLowerCase());
+              selectedCountries.splice(index, 1)
+              this.setState({
+                selectedCountries,
+              });
+              jQuery("#vmap").vectorMap('deselect', code);
+              Swal("Country removed", "I'm sure you will be there soon", "warning");
+            }
+          });
+        } else {
+          Swal({
+            title: `Have you visited ${region}?`,
+            type: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "👎",
+            confirmButtonText: "👍"
+          }).then(result => {
+            if (result.value) {
+              const selectedCountries = this.state.selectedCountries;
+              selectedCountries.push(code.toUpperCase());
+              this.setState({
+                selectedCountries,
+              });
+              jQuery("#vmap").vectorMap('select', code);
+              Swal("Country visited!", "🚌 🗺 You are an explorator! 😍 🧳", "success");
+            }
+          });
+        }
       },
-      onRegionDeselect: function(event, code, region) {
-        console.log(event, code, region)
-      }
     });
   }
   render() {
     return (
       <div className="App">
         <div id="vmap" style={{ width: "100%", height: window.innerHeight }} />
+        <footer>{this.state.selectedCountries.length} countr{this.state.selectedCountries.length > 1 ? 'ies' : 'y'} visited</footer>
       </div>
     );
   }
