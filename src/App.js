@@ -17,13 +17,11 @@ class App extends Component {
       backgroundColor: "#343a41",
       color: "#caa30a",
       hoverOpacity: 0.9,
-      showTooltip: false,
+      showTooltip: true,
       multiSelectRegion: true,
       selectedColor: "#00abe7",
       showLabels: false,
       borderColor: "#000",
-      borderWidth: 1,
-      borderOpaticity: 1,
       selectedCountries: this.state.selectedCountries,
       onRegionClick: (event, code, region) => {
         event.preventDefault();
@@ -45,7 +43,6 @@ class App extends Component {
                 selectedCountries,
               });
               jQuery("#vmap").vectorMap('deselect', code);
-              Swal("Country removed", "I'm sure you will be there soon", "warning");
             }
           });
         } else {
