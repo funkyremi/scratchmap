@@ -1,3 +1,11 @@
-Doc : 
-https://github.com/10bestdesign/jqvmap
-https://www.10bestdesign.com/jqvmap/documentation/
+# Scratch Map
+
+Visualize how many countries you visited with this online scratch map.
+
+### Live Demo
+
+https://funkyremi.github.io/scratchmap/
+
+### Screenshot
+
+![screenshot](demo.png)
